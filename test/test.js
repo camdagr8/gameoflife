@@ -15,8 +15,20 @@ describe('GameOfLife.next()', function () {
     const state = gol.next();
 
     it('GameOfLife.next()', function() {
-        console.log("\n   ", "prev:", state.prev);
-        console.log("   ", "next:", state.next, "\n");
+        let pr = JSON.parse(state.prev);
+        let nx = JSON.parse(state.next);
+
+        console.log("\n");
+        pr.forEach((item, i) => {
+            let n = nx[i].join('.');
+            let p = pr[i].join('.');
+
+            n = n.replace(/1/gi, '▓').replace(/0/gi, ' ');
+            p = p.replace(/1/gi, '▓').replace(/0/gi, ' ');
+            console.log("   ", "prev:", p, '->', n, ':next');
+        });
+        console.log("\n");
+
         state.next.should.equal(finalState);
     });
 });
