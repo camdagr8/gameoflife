@@ -12,7 +12,7 @@ $ npm install
 ```bash
 $ npm start
 ```
-> _Your browser should launch and run the Game of Life page._
+> _Your browser should launch the Game of Life page._
 
 3. Select the grid layout and configuration then click the `start` button.
 
