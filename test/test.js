@@ -23,8 +23,8 @@ describe('GameOfLife.next()', function () {
             let n = nx[i].join('.');
             let p = pr[i].join('.');
 
-            n = n.replace(/1/gi, '▓').replace(/0/gi, ' ');
-            p = p.replace(/1/gi, '▓').replace(/0/gi, ' ');
+            n = n.replace(/1/gi, '█').replace(/0/gi, ' ');
+            p = p.replace(/1/gi, '█').replace(/0/gi, ' ');
             console.log("   ", "prev:", p, '->', n, ':next');
         });
         console.log("\n");
