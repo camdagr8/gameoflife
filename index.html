@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Game Of Life</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+
+    <style>
+        html {
+            height: 100%;
+            overflow: hidden;
+        }
+
+        body {
+            position: relative;
+            background-color: #313131;
+            height: 100%;
+        }
+
+        canvas {
+            border: 1px solid #212121;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        canvas.active {
+            display: block;
+            -webkit-box-shadow: 2px 2px 20px 2px rgba(0,0,0,0.5);
+            box-shadow: 2px 2px 20px 2px rgba(0,0,0,0.5);
+        }
+
+        .btn .icon {
+            height: 16px;
+            width: 16px;
+            margin-top: 3px;
+            display: inline-block;
+        }
+
+        .check-row {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .check-row > * {
+            margin: 4px;
+        }
+
+        #btn-stop {
+            display: none;
+            top: 50%;
+            left: 50%;
+            position: absolute;
+            text-transform: uppercase;
+            transform: translateX(-50%);
+        }
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
+        <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <span class="navbar-brand">Game of Life</span>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="#">Source Code</a>
+                </li>
+            </ul>
+            <form class="my-2 my-lg-0" id="game-form" data-target="canvas">
+                <div class="input-group">
+                    <div class="input-group-btn">
+                        <button id="column-btn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            8 columns
+                        </button>
+                        <div class="dropdown-menu">
+                            <label class="dropdown-item"> 4 columns<input type="radio"  value="4" name="columns" class="hidden-xs-up" data-select="#column-btn" /></label>
+                            <label class="dropdown-item"> 6 columns<input type="radio"  value="6" name="columns" class="hidden-xs-up" data-select="#column-btn" /></label>
+                            <label class="dropdown-item active"> 8 columns<input type="radio"  value="8" name="columns" class="hidden-xs-up" data-select="#column-btn" checked="checked" aria-checked="true" /></label>
+                            <label class="dropdown-item">10 columns<input type="radio" value="10" name="columns" class="hidden-xs-up" data-select="#column-btn" /></label>
+                        </div>
+                    </div>
+                    <div class="input-group-btn">
+                        <button id="row-btn" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            6 rows
+                        </button>
+                        <div class="dropdown-menu">
+                            <label class="dropdown-item"> 4 rows<input type="radio"  value="4" name="rows" class="hidden-xs-up" data-select="#row-btn" /></label>
+                            <label class="dropdown-item active"> 6 rows<input type="radio"  value="6" name="rows" class="hidden-xs-up" data-select="#row-btn" checked="checked" aria-checked="true" /></label>
+                            <label class="dropdown-item"> 8 rows<input type="radio"  value="8" name="rows" class="hidden-xs-up" data-select="#row-btn" /></label>
+                            <label class="dropdown-item">10 rows<input type="radio" value="10" name="rows" class="hidden-xs-up" data-select="#row-btn" /></label>
+                        </div>
+                    </div>
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-secondary" id="show-grid-modal">
+                            <svg class="icon lnr-cog">
+                                <use xlink:href="/assets/images/symbol-defs.svg#lnr-grid"></use>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="input-group-btn">
+                        <button type="submit" class="btn btn-danger">START</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </nav>
+
+    <canvas id="canvas"></canvas>
+
+    <button type="button" class="btn btn-danger" id="btn-stop">STOP</button>
+
+    <form class="modal fade" id="grid-modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Initial State</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body"></div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger btn-block" id="btn-state">SAVE CHANGES</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+    <script src="/assets/js/main.js"></script>
+</body>
+</html>
