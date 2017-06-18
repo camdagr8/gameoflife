@@ -378,7 +378,9 @@ $(function () {
 
         drawCanvas(window.game);
 
-        window.game.start();
+        setTimeout(function () {
+            window.game.start();
+        }, 1000);
     });
 
     $('[data-select]').on('change', function () {
