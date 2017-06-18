@@ -1,4 +1,4 @@
-#Game of Life
+# Game of Life
 
 ## Getting Started
 
@@ -17,7 +17,7 @@ $ npm start
 3. Select the grid layout and configuration then click the `start` button.
 
 ## Running Tests
-You can run a test script that will take the default and move it forward 1 state.
+You can run a test script that will take the default grid layout and configuration and move it forward 1 state.
 
 ```bash
 $ npm test

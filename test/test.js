@@ -1,5 +1,5 @@
 const should        = require('chai').should();
-const GameOfLife    = require('../lib/GameOfLife.js');
+const GameOfLife    = require('../src/lib/GameOfLife.js');
 
 describe('GameOfLife.next()', function () {
     let cells = [

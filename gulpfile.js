@@ -8,7 +8,7 @@ const webpack        = require('webpack');
 const config         = {
     dev        : gutil.env.dev,
     scripts    : {
-        'assets/js/main': './main.js'
+        'assets/js/main': './src/main.js'
     }
 };
 
